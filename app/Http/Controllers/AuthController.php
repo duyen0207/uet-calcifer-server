@@ -65,6 +65,9 @@ class AuthController extends Controller
         return response([
             'message' => 'Logged in successfully.' . $user->Password,
             'token' => $token,
+            'FullName' => $user->FullName,
+            'UserRole' => $user->UserRole,
+            'user' => $user,
             'token_type' => 'Bearer'
         ], 201);
     }

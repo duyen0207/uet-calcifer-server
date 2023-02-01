@@ -2,18 +2,16 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+class PracticeClass extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory;
+    protected $table = 'practice_class';
+    protected $primaryKey = 'ClassId';
 
-    protected $table = 'user';
-    protected $primaryKey = 'UserId';
+    public $timestamps = false;
     // protected $keyType = 'string';
 
 
@@ -23,14 +21,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'UserId',
-        'UserName',
-        'Password',
-        'Role',
-        'FullName',
-        'Email',
-        'DateOfBirth',
-        'CourseClass',
+        'ClassId',
+        'LMHCode',
+        'ClassGroup',
+        'Semester',
         'CreatedTime',
         'CreatedBy',
         'ModifiedTime',
@@ -42,9 +36,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'Password',
-    ];
+    protected $hidden = [];
 
     /**
      * The attributes that should be cast.
