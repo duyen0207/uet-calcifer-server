@@ -13,11 +13,11 @@ class SubmissionController extends Controller
     {
         $userId = $req->UserId;
 
-        $practice_classes = Submission::all();
+        $submissiones = Submission::all();
 
         return response([
-            "messages" => "Load lớp học thành công.",
-            "classes" => $practice_classes
+            "message" => "Load dữ liệu thành công.",
+            "data" => $submissiones
         ]);
     }
 
@@ -26,25 +26,25 @@ class SubmissionController extends Controller
     {
         $req->validate([]);
 
-        // $classId = $req->LMHCode . ' N' . $req->ClassGroup;
+        // $classId = $req->ClassCode . ' N' . $req->ClassGroup;
         // $isExist = Submission::where('ClassId', $classId)->first();
 
         // if ($isExist) return response([
         //     'message' => 'This class is already exist.' . $classId,
         // ]);
-        $practice_class = Submission::create([
-            // 'SubmissionId' => $req->SubmissionId,
+        $submission = Submission::create([
+            'SubmissionId' => $req->SubmissionId,
             'ExerciseId' => $req->ExerciseId,
             'StudentId' => $req->StudentId,
             'Iter' => $req->Iter,
             'SubmittedLink' => $req->SubmittedLink,
-            'TestcaseResult' => $req->TestcaseResult,
-            'Score' => $req->Score,
-            // 'CreatedTime' => $req->CreatedTime
+            // 'TestcaseResult' => $req->TestcaseResult,
+            // 'Score' => $req->Score,
+            'CreatedTime' => now()
         ]);
 
         return response([
-            'message' => 'Class created successfully.' . $practice_class,
+            'message' => 'Class created successfully.' . $submission->SubmittedLink,
         ], 201);
     }
 }

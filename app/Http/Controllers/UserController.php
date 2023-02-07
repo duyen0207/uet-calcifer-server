@@ -22,4 +22,12 @@ class UserController extends Controller
         if (!$users) return ["error" => "username or password is not matched"];
         return $users;
     }
+
+    function my_classes(Request $req) {
+        $my_classes = User::find('SV-19021254')->practice_classes()->get();
+        return response([
+            'message' => 'Load course successfully.',
+            'data' => $my_classes
+        ], 201);
+    }
 }

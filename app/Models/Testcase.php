@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Problem extends Model
+class Testcase extends Model
 {
     use HasFactory;
-    protected $table = 'problem';
-    protected $primaryKey = 'ProblemId';
-    // public $incrementing = false;
+    protected $table = 'testcase';
+    protected $primaryKey = 'TestcaseId';
+    public $incrementing = false;
 
     public $timestamps = false;
     // protected $keyType = 'string';
@@ -22,16 +22,14 @@ class Problem extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'TestcaseId',
         'ProblemId',
-        'ProblemTitle',
-        'Tags',
-        'ProblemContent',
-        'NumberOfTestcase',
-        'TestcaseScript',
+        'Order',
+        'TestcaseDescript',
+        'Score',
+        'Hidden',
         'CreatedTime',
-        'CreatedBy',
-        'ModifiedTime',
-        'ModifiedBy'
+        'CreatedBy'
     ];
 
     /**
@@ -47,16 +45,4 @@ class Problem extends Model
      * @var array<string, string>
      */
     protected $casts = [];
-
-    // relationship
-    // 1-m
-    function testcases()
-    {
-        return $this->hasMany(Testcase::class, 'ProblemId', 'ProblemId');
-    }
-    // 1-m
-    function exercises()
-    {
-        return $this->hasMany(Exercise::class, 'ProblemId', 'ProblemId');
-    }
 }

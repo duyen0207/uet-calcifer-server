@@ -15,8 +15,8 @@ class PracticeClassController extends Controller
         $practice_classes = PracticeClass::all();
 
         return response([
-            "messages" => "Load lớp học thành công.",
-            "classes" => $practice_classes
+            "message" => "Load dữ liệu thành công.",
+            "data" => $practice_classes
         ]);
     }
 
@@ -25,13 +25,13 @@ class PracticeClassController extends Controller
     {
         $req->validate([
             // 'ClassId' => 'required',
-            'LMHCode' => 'required',
+            'ClassCode' => 'required',
             // 'ClassGroup' => 'required',
             // 'Semester' => 'required',
 
         ]);
 
-        $classId = $req->LMHCode . ' N' . $req->ClassGroup;
+        $classId = $req->ClassCode . ' N' . $req->ClassGroup;
         $isExist = PracticeClass::where('ClassId', $classId)->first();
 
         if ($isExist) return response([
@@ -39,9 +39,9 @@ class PracticeClassController extends Controller
         ]);
         $practice_class = PracticeClass::create([
             'ClassId' => $classId,
-            'LMHCode' => $req->LMHCode,
-            'ClassGroup' => $req->ClassGroup | 1,
-            'Semester' => $req->Semester | "I 2022-2023",
+            'ClassCode' => $req->ClassCode,
+            'ClassGroup' => 1,
+            'Semester' => "I 2022-2023",
             'CreatedTime' => now(),
             'CreatedBy' => $req->CreatedBy,
         ]);

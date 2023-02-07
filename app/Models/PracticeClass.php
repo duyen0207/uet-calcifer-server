@@ -10,6 +10,7 @@ class PracticeClass extends Model
     use HasFactory;
     protected $table = 'practice_class';
     protected $primaryKey = 'ClassId';
+    public $incrementing = false;
 
     public $timestamps = false;
     // protected $keyType = 'string';
@@ -22,7 +23,7 @@ class PracticeClass extends Model
      */
     protected $fillable = [
         'ClassId',
-        'LMHCode',
+        'ClassCode',
         'ClassGroup',
         'Semester',
         'CreatedTime',
@@ -44,4 +45,11 @@ class PracticeClass extends Model
      * @var array<string, string>
      */
     protected $casts = [];
+
+    // relationship
+    // m-n
+    function users()
+    {
+        return $this->belongsToMany(User::class, 'user_class', 'ClassId', 'UserId');
+    }
 }

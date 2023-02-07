@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\PracticeClassController;
 use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\TestcaseController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +42,8 @@ Route::post('/users', [AuthController::class, 'register']);
 Route::put('/users', [AuthController::class, 'login']);
 // delete
 Route::delete('/users', [AuthController::class, 'login']);
+// get class of user
+Route::get('/users-classes', [UserController::class, 'my_classes']);
 
 
 /**
@@ -51,23 +55,29 @@ Route::get('/practice-classes/filter', [PracticeClassController::class, 'show'])
 // create
 Route::post('/practice-classes', [PracticeClassController::class, 'create']);
 // update
-Route::put('/practice-classes', [AuthController::class, 'login']);
+Route::put('/practice-classes', [PracticeClassController::class, 'login']);
 // delete
-Route::delete('/practice-classes', [AuthController::class, 'login']);
+Route::delete('/practice-classes', [PracticeClassController::class, 'login']);
 
 /**
  * Exercises
  */
+// filter
+Route::get('/exercises/filter', [ExerciseController::class, 'show']);
+
 // create
-Route::post('/exercises', [AuthController::class, 'create']);
+Route::post('/exercises', [ExerciseController::class, 'create']);
 // update
-Route::put('/exercises', [AuthController::class, 'login']);
+Route::put('/exercises', [ExerciseController::class, 'login']);
 // delete
-Route::delete('/exercises', [AuthController::class, 'login']);
+Route::delete('/exercises', [ExerciseController::class, 'login']);
 
 /**
  * Assignments
  */
+// filter
+Route::get('/assignments/filter', [PracticeClassController::class, 'show']);
+
 // create
 Route::post('/assignments', [AuthController::class, 'create']);
 // update
@@ -83,9 +93,9 @@ Route::get('/submissions/filter', [SubmissionController::class, 'show']);
 // create
 Route::post('/submissions', [SubmissionController::class, 'create']);
 // update
-Route::put('/submissions', [AuthController::class, 'login']);
+Route::put('/submissions', [SubmissionController::class, 'login']);
 // delete
-Route::delete('/submissions', [AuthController::class, 'login']);
+Route::delete('/submissions', [SubmissionController::class, 'login']);
 
 /**
  * Submission reports
@@ -96,9 +106,9 @@ Route::get('/submissions/filter', [SubmissionController::class, 'show']);
 // create
 Route::post('/submission_reports', [SubmissionController::class, 'create']);
 // update
-Route::put('/submission_reports', [AuthController::class, 'login']);
+Route::put('/submission_reports', [SubmissionController::class, 'login']);
 // delete
-Route::delete('/submission_reports', [AuthController::class, 'login']);
+Route::delete('/submission_reports', [SubmissionController::class, 'login']);
 
 
 /**
@@ -108,18 +118,21 @@ Route::delete('/submission_reports', [AuthController::class, 'login']);
 Route::get('/problems/filter', [ProblemController::class, 'show']);
 
 // create
-Route::post('/problems', [AuthController::class, 'create']);
+Route::post('/problems', [ProblemController::class, 'create']);
 // update
-Route::put('/problems', [AuthController::class, 'login']);
+Route::put('/problems', [ProblemController::class, 'login']);
 // delete
-Route::delete('/problems', [AuthController::class, 'login']);
+Route::delete('/problems', [ProblemController::class, 'login']);
 
 /**
  * Test cases
  */
+// filter
+Route::get('/testcases/filter', [TestcaseController::class, 'show']);
+
 // create
-Route::post('/testcases', [AuthController::class, 'create']);
+Route::post('/testcases', [TestcaseController::class, 'create']);
 // update
-Route::put('/testcases', [AuthController::class, 'login']);
+Route::put('/testcases', [TestcaseController::class, 'login']);
 // delete
-Route::delete('/testcases', [AuthController::class, 'login']);
+Route::delete('/testcases', [TestcaseController::class, 'login']);

@@ -10,6 +10,8 @@ class Submission extends Model
     use HasFactory;
     protected $table = 'submission';
     protected $primaryKey = 'SubmissionId';
+    public $incrementing = false;
+
 
     public $timestamps = false;
     // protected $keyType = 'string';

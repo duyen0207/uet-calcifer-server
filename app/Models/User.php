@@ -14,6 +14,8 @@ class User extends Authenticatable
 
     protected $table = 'user';
     protected $primaryKey = 'UserId';
+    // public $incrementing = false;
+
     // protected $keyType = 'string';
 
 
@@ -52,4 +54,16 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [];
+
+    // relationship
+    // 1-m
+    function submissions()
+    {
+        return $this->hasMany(Submission::class, 'StudentId', 'UserId');
+    }
+    // m-n
+    function practice_classes()
+    {
+        return $this->belongsToMany(PracticeClass::class, 'user_class', 'UserId', 'ClassId');
+    }
 }
