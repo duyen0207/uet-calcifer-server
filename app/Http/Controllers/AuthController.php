@@ -6,6 +6,8 @@ use App\Models\User;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
 
 class AuthController extends Controller
 {
@@ -22,7 +24,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
-            // 'UserId' => ,
+            'UserId' => Str::uuid()->toString(),
             'UserName' => $req->UserName,
             'Password' => Hash::make($req->Password),
             'Role' => $req->Role,
@@ -65,6 +67,9 @@ class AuthController extends Controller
         return response([
             'message' => 'Logged in successfully.' . $user->Password,
             'token' => $token,
+            'FullName' => $user->FullName,
+            'UserRole' => $user->UserRole,
+            'user' => $user,
             'token_type' => 'Bearer'
         ], 201);
     }
