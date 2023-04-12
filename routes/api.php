@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/users', [AuthController::class, 'register']);
 
 // Private routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -32,18 +33,14 @@ Route::middleware('auth:sanctum')->group(function () {
      */
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('/users', [AuthController::class, 'user']);
+    Route::get('/users/filter', [UserController::class, 'filter']);
+    // update
+    // Route::put('/users', [AuthController::class, 'login']);
+    // delete
+    // Route::delete('/users', [AuthController::class, 'login']);
+    // get class of user
+    Route::get('/users-classes', [UserController::class, 'my_classes']);
 });
-
-
-Route::get('/users/filter', [UserController::class, 'filter']);
-// create
-Route::post('/users', [AuthController::class, 'register']);
-// update
-Route::put('/users', [AuthController::class, 'login']);
-// delete
-Route::delete('/users', [AuthController::class, 'login']);
-// get class of user
-Route::get('/users-classes', [UserController::class, 'my_classes']);
 
 
 /**

@@ -17,17 +17,18 @@ class AuthController extends Controller
         $req->validate([
             'UserName' => 'required',
             'Password' => 'required',
-            'Role' => 'required',
+            'UserRole' => 'required',
             'FullName' => 'required',
             'Email' => 'required',
 
         ]);
 
         $user = User::create([
-            'UserId' => Str::uuid()->toString(),
+            // 'UserId' => Str::uuid()->toString(),
             'UserName' => $req->UserName,
-            'Password' => Hash::make($req->Password),
-            'Role' => $req->Role,
+            // 'Password' => Hash::make($req->Password),
+            'Password' => $req->Password,
+            'UserRole' => $req->UserRole,
             'FullName' => $req->FullName,
             'Email' => $req->Email,
             'DateOfBirth' => $req->DateOfBirth,
@@ -39,6 +40,7 @@ class AuthController extends Controller
         // $token = $user->createToken($user->UserId)->plainTextToken;
         return response([
             'message' => 'Account created successfully.' . $req->FullName,
+            'data' => $user
             // 'token' => $token,
             // 'token_type' => 'Bearer'
         ]);
@@ -66,7 +68,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
         return response([
             'message' => 'Logged in successfully.' . $user->Password,
-            'access_token' => $token,
+            'token' => $token,
             'token_type' => 'Bearer',
             'FullName' => $user->FullName,
             'UserRole' => $user->UserRole,

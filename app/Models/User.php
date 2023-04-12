@@ -15,7 +15,9 @@ class User extends Authenticatable
 
     protected $table = 'user';
     protected $primaryKey = 'UserId';
-    // public $incrementing = false;
+    public $incrementing = false;
+    public $timestamps = false;
+
 
     // protected $keyType = 'string';
 
@@ -29,7 +31,7 @@ class User extends Authenticatable
         'UserId',
         'UserName',
         'Password',
-        'Role',
+        'UserRole',
         'FullName',
         'Email',
         'DateOfBirth',
@@ -57,9 +59,10 @@ class User extends Authenticatable
     protected $casts = [];
 
 
-    public static function boot(){
+    public static function boot()
+    {
         parent::boot();
-        self::creating(function ($model){
+        self::creating(function ($model) {
             $model->UserId = (string) Uuid::generate(4);
         });
     }
