@@ -36,11 +36,11 @@ class AuthController extends Controller
             'CreatedBy' => $req->CreatedBy,
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // $token = $user->createToken($user->UserId)->plainTextToken;
         return response([
             'message' => 'Account created successfully.' . $req->FullName,
-            'token' => $token,
-            'token_type' => 'Bearer'
+            // 'token' => $token,
+            // 'token_type' => 'Bearer'
         ]);
     }
 
@@ -66,12 +66,18 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
         return response([
             'message' => 'Logged in successfully.' . $user->Password,
-            'token' => $token,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
             'FullName' => $user->FullName,
             'UserRole' => $user->UserRole,
             'user' => $user,
-            'token_type' => 'Bearer'
         ], 201);
+    }
+
+    function user(Request $request)
+    {
+        $user = auth('sanctum')->user();
+        return $user;
     }
 
     function logout(Request $req)

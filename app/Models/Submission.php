@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Webpatser\Uuid\Uuid;
 
 class Submission extends Model
 {
@@ -46,4 +47,11 @@ class Submission extends Model
      * @var array<string, string>
      */
     protected $casts = [];
+
+    public static function boot(){
+        parent::boot();
+        self::creating(function ($model){
+            $model->SubmissionId = (string) Uuid::generate(4);
+        });
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\PracticeClassController;
 use App\Http\Controllers\ProblemController;
@@ -21,20 +22,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// auth
-// login
+// Public routes
 Route::post('/login', [AuthController::class, 'login']);
-// logout
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-/**
- * User
- */
-// show
-Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
-    return $request->user();
+// Private routes
+Route::middleware('auth:sanctum')->group(function () {
+    /**
+     * User
+     */
+    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::get('/users', [AuthController::class, 'user']);
 });
-// Route::middleware('auth:sanctum')->get('/users/filter', [UserController::class, 'filter']);
+
+
 Route::get('/users/filter', [UserController::class, 'filter']);
 // create
 Route::post('/users', [AuthController::class, 'register']);
@@ -136,3 +136,22 @@ Route::post('/testcases', [TestcaseController::class, 'create']);
 Route::put('/testcases', [TestcaseController::class, 'login']);
 // delete
 Route::delete('/testcases', [TestcaseController::class, 'login']);
+
+
+/**
+ * Courses
+ */
+// get semester
+Route::get('/semesters', [CourseController::class, 'getLatestSemesters']);
+// get class
+Route::get('/courses', [CourseController::class, 'getCourseByUserAndSemester']);
+// Route::middleware('auth:sanctum')->get('/courses', function (Request $request) {
+//     return $request->user();
+// });
+
+
+
+
+Route::fallback(function () {
+    //
+});
