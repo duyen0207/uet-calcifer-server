@@ -78,8 +78,7 @@ class AuthController extends Controller
 
     function user(Request $request)
     {
-        $user = auth('sanctum')->user();
-        return $user;
+        return $request->user();
     }
 
     function logout(Request $req)

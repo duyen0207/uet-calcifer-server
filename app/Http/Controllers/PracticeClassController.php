@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PracticeClass;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PracticeClassController extends Controller
 {
@@ -49,5 +50,34 @@ class PracticeClassController extends Controller
         return response([
             'message' => 'Class created successfully.' . $practice_class->ClassId,
         ], 201);
+    }
+
+    // get by id
+    function get($classId)
+    {
+        $practice_class = PracticeClass::find($classId);
+        $message = "";
+        return response([
+            "message" => "Lớp học là",
+            "data" => $practice_class,
+            "classId" => $classId
+        ]);
+    }
+
+    //get practice classes by theory code
+    function getByClassCode(Request $request)
+    {
+        $userId = $request->user()->UserId;
+        $semester = $request->semester;
+        $classCode = $request->classCode;
+        $data = DB::select("CALL Proc_PracticeClass_GetByClassCode(?,?,?)", array($classCode, $semester, $userId));
+        return
+            response([
+                'message' => 'Load classes successfully.',
+                'user' => $request->user()->UserId,
+                'semester' => $semester,
+                "classCode" => $classCode,
+                'data' => $data
+            ], 201);
     }
 }

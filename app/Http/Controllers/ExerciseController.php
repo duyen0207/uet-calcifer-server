@@ -4,22 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Exercise;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ExerciseController extends Controller
 {
-    //
-    // show
-    function show(Request $req)
+    // get
+    function get($exerciseId, Request $request)
     {
-        $userId = $req->UserId;
+        $user = $request->user();
+        $exercise = DB::select("CALL Proc_Exercise_GetById(?)", array($exerciseId));
+        $testCases = DB::select("CALL Proc_Problem_GetAllTestCases(?)", array($exercise[0]->ProblemId));
 
-        $exercisees = Exercise::all();
+        $data = [
+            "exercise" => $exercise[0],
+            "tests" => $testCases
+        ];
+        return
+            response([
+                'message' => 'Load exercise successfully.',
+                'user' => $request->user()->UserId,
+                'data' => $data
+            ], 201);
+    }
 
-        return response([
-            "message" => "Load bài tập thành công.",
-            "classes" => $exercisees
-        ]);
+
+    // show
+    function getAllExercises(Request $request)
+    {
+        $classId = $request->classId;
+
+        $data = DB::select("CALL Proc_Exercises_GetAllExercisesByClassId(?)", array($classId));
+
+        return
+            response([
+                'message' => 'Load classes successfully.',
+                'user' => $request->user()->UserId,
+                'data' => $data
+            ], 201);
     }
 
     // create
@@ -53,5 +76,26 @@ class ExerciseController extends Controller
         return response([
             'message' => 'Exercise created successfully.' . $exercise->ExerciseId,
         ], 201);
+    }
+
+    // statistics
+    function statistic(Request $request)
+    {
+        $exerciseId = $request->exerciseId;
+        $submittedStudents = DB::select("CALL Proc_Statistic_GetSubmittedStudentsPerTotal(?)", array($exerciseId));
+        $markedSubmissions = DB::select("CALL Proc_Statistic_MarkedSubmissionPerTotal(?)", array($exerciseId));
+        $highestLowestScore = DB::select("CALL Proc_Statistic_HighestLowestScore(?)", array($exerciseId));
+        $listNotSubmitted = DB::select("CALL Proc_Statistic_NotSubmittedStudents(?)", array($exerciseId));
+
+        return
+            response([
+                'message' => 'Load statistic of exercise successfully.',
+                'data' => [
+                    "submittedStudents" => $submittedStudents[0],
+                    "markedSubmissions" => $markedSubmissions[0],
+                    "highestLowestScore" => $highestLowestScore[0],
+                    "listNotSubmitted" => $listNotSubmitted
+                ]
+            ], 201);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Testcase;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TestcaseController extends Controller
 {
@@ -46,5 +47,25 @@ class TestcaseController extends Controller
         return response([
             'message' => 'Class created successfully.' . $testcase->TestcaseId,
         ], 201);
+    }
+
+    // get all test cases
+    function getAllTestcase(Request $request)
+    {
+        $user = $request->user();
+        // check if allowed
+        if ($user->UserRole == 0 || $user->UserRole == 2)
+            return response([
+                'message' => "You don't have permission to access.",
+                'data' => null
+            ], 403);
+
+        $problemId = $request->problemId;
+        $testCases = DB::select("CALL Proc_Problem_GetAllTestCases(?)", array($problemId));
+        return
+            response([
+                'message' => 'Load test cases successfully.',
+                'data' => $testCases
+            ], 201);
     }
 }

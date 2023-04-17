@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Webpatser\Uuid\Uuid;
 
 class PracticeClass extends Model
 {
@@ -45,6 +46,14 @@ class PracticeClass extends Model
      * @var array<string, string>
      */
     protected $casts = [];
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $model->ClassId = (string) Uuid::generate(4);
+        });
+    }
 
     // relationship
     // m-n

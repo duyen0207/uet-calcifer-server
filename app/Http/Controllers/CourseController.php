@@ -11,21 +11,41 @@ class CourseController extends Controller
     //
     function getLatestSemesters(Request $request)
     {
-        $latestSemester = DB::select("CALL Proc_Other_GetLatestSemesters");
-        // print_r($latestSemester);
+        $userId = $request->user()->UserId;
+        $latestSemester = DB::select("Call Proc_Advance_GetSemestersByUser(?)", array($userId));
+
         return
             response([
                 'message' => 'Load semester successfully.',
+                'userId' => $userId,
                 'data' => $latestSemester
+            ], 201);
+    }
+
+    function getTheoryClass(Request $request)
+    {
+        $userId = $request->user()->UserId;
+        $semester = $request->semester;
+        $data = DB::select("CALL Proc_Other_GetTheoryClassByUser(?,?)", array($userId, $semester));
+        return
+            response([
+                'message' => 'Load theory classes successfully.',
+                'user' => $request->user()->UserId,
+                'semester' => $semester,
+                'data' => $data
             ], 201);
     }
 
     function getCourseByUserAndSemester(Request $request)
     {
-        $data = DB::select("CALL Proc_PracticeClass_GetByUserAndSemester('II 2022-2023', 'GV-0001')");
+        $userId = $request->user()->UserId;
+        $semester = $request->semester;
+        $data = DB::select("CALL Proc_PracticeClass_GetByUserAndSemester(?,?)", array($semester, $userId));
         return
             response([
                 'message' => 'Load course successfully.',
+                'user' => $request->user()->UserId,
+                'semester' => $semester,
                 'data' => $data
             ], 201);
     }

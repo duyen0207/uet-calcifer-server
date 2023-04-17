@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Submission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SubmissionController extends Controller
 {
@@ -13,11 +14,11 @@ class SubmissionController extends Controller
     {
         $userId = $req->UserId;
 
-        $submissiones = Submission::all();
+        $submissions = Submission::all();
 
         return response([
             "message" => "Load dữ liệu thành công.",
-            "data" => $submissiones
+            "data" => $submissions
         ]);
     }
 
@@ -33,7 +34,7 @@ class SubmissionController extends Controller
         //     'message' => 'This class is already exist.' . $classId,
         // ]);
         $submission = Submission::create([
-            'SubmissionId' => $req->SubmissionId,
+            // 'SubmissionId' => $req->SubmissionId,
             'ExerciseId' => $req->ExerciseId,
             'StudentId' => $req->StudentId,
             'Iter' => $req->Iter,
@@ -46,5 +47,25 @@ class SubmissionController extends Controller
         return response([
             'message' => 'Class created successfully.' . $submission->SubmittedLink,
         ], 201);
+    }
+
+    // get all by exercise id
+    function getAllOfExercise(Request $request)
+    {
+        $user = $request->user();
+        // check if allowed
+        if ($user->UserRole == 0 || $user->UserRole == 2)
+            return response([
+                'message' => "You don't have permission to access.",
+                'data' => null
+            ], 403);
+
+        $exerciseId = $request->exerciseId;
+        $submissions = DB::select("CALL Proc_Submission_GetAllOfExercise(?)", array($exerciseId));
+        return
+            response([
+                'message' => 'Load submissions successfully.',
+                'data' => $submissions
+            ], 201);
     }
 }

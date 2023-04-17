@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Webpatser\Uuid\Uuid;
 
 class Exercise extends Model
 {
@@ -50,6 +51,13 @@ class Exercise extends Model
      */
     protected $casts = [];
 
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $model->ExerciseId = (string) Uuid::generate(4);
+        });
+    }
     // relationship
     // 1-m
     function submissions()
