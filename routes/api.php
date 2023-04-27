@@ -6,6 +6,7 @@ use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\PracticeClassController;
 use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\SubmissionReportController;
 use App\Http\Controllers\TestcaseController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -55,13 +56,17 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * Practice Classes
      */
+    // filter
+    Route::get('/practice-classes/filter', [PracticeClassController::class, 'show']);
+
+    // get members
+    Route::get('/practice-classes/{classId}/members', [PracticeClassController::class, 'getAllMembers']);
+
     // get by id
     Route::get('/practice-classes/{classId}', [PracticeClassController::class, 'get']);
 
     // get by code
     Route::get('/practice-classes', [PracticeClassController::class, 'getByClassCode']);
-    // filter
-    Route::get('/practice-classes/filter', [PracticeClassController::class, 'show']);
 
     // create
     Route::post('/practice-classes', [PracticeClassController::class, 'create']);
@@ -88,7 +93,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/exercises', [ExerciseController::class, 'login']);
 
 
-
     /**
      * Submissions
      */
@@ -103,6 +107,34 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/submissions', [SubmissionController::class, 'login']);
     // delete
     Route::delete('/submissions', [SubmissionController::class, 'login']);
+
+
+    /**
+     * Submission reports
+     */
+    // get
+    Route::get('/submission-reports', [SubmissionReportController::class, 'getAllReports']);
+    // create
+    Route::post('/submission-reports', [SubmissionReportController::class, 'create']);
+    // update
+    Route::put('/submission-reports', [SubmissionReportController::class, 'login']);
+    // delete
+    Route::delete('/submission-reports', [SubmissionReportController::class, 'login']);
+
+
+    /**
+     * Problems
+     */
+    // filter
+    Route::get('/problems/filter', [ProblemController::class, 'show']);
+
+    // create
+    Route::post('/problems', [ProblemController::class, 'create']);
+    // update
+    Route::put('/problems', [ProblemController::class, 'login']);
+    // delete
+    Route::delete('/problems', [ProblemController::class, 'login']);
+
 
     /**
      * Test cases
@@ -123,9 +155,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("/statistic/exercises", [ExerciseController::class, "statistic"]);
 });
 
-
-
-
 /**
  * Assignments
  */
@@ -141,32 +170,9 @@ Route::delete('/assignments', [AuthController::class, 'login']);
 
 
 
-/**
- * Submission reports
- */
-// filter
-Route::get('/submissions/filter', [SubmissionController::class, 'show']);
-
-// create
-Route::post('/submission_reports', [SubmissionController::class, 'create']);
-// update
-Route::put('/submission_reports', [SubmissionController::class, 'login']);
-// delete
-Route::delete('/submission_reports', [SubmissionController::class, 'login']);
 
 
-/**
- * Problems
- */
-// filter
-Route::get('/problems/filter', [ProblemController::class, 'show']);
 
-// create
-Route::post('/problems', [ProblemController::class, 'create']);
-// update
-Route::put('/problems', [ProblemController::class, 'login']);
-// delete
-Route::delete('/problems', [ProblemController::class, 'login']);
 
 
 

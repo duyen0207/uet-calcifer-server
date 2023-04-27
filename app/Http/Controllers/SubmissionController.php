@@ -53,19 +53,30 @@ class SubmissionController extends Controller
     function getAllOfExercise(Request $request)
     {
         $user = $request->user();
+        $exerciseId = $request->exerciseId;
+
+        $submissions = [];
+
         // check if allowed
-        if ($user->UserRole == 0 || $user->UserRole == 2)
+        if ($user->UserRole == 2) {
             return response([
                 'message' => "You don't have permission to access.",
                 'data' => null
             ], 403);
-
-        $exerciseId = $request->exerciseId;
-        $submissions = DB::select("CALL Proc_Submission_GetAllOfExercise(?)", array($exerciseId));
+        } 
+        else if ($user->UserRole == 0) {
+            // student
+            $submissions = DB::select("CALL Proc_Submission_GetByUserAndExercise(?,?)", array($user->UserId, $exerciseId));
+        } 
+        else {
+            // teacher
+            $submissions = DB::select("CALL Proc_Submission_GetAllOfExercise(?)", array($exerciseId));
+        }
         return
             response([
                 'message' => 'Load submissions successfully.',
                 'data' => $submissions
             ], 201);
     }
+
 }

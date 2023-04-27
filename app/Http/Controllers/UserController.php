@@ -16,14 +16,21 @@ class UserController extends Controller
         return $user;
     }
 
-    function filter(Request $request) {
+    function filter(Request $request)
+    {
         // dd($request->userRole);
-        $users = User::where('UserRole', $request->userRole)->get();
-        if (!$users) return ["error" => "username or password is not matched"];
-        return $users;
+        $userRole = $request->userRole;
+        $users = User::where('UserRole', $userRole)->get();
+        // if (!$users) return ["error" => "username or password is not matched"];
+        return
+            response([
+                'message' => 'Load user by role successfully.',
+                'data' => $users
+            ], 201);
     }
 
-    function my_classes(Request $req) {
+    function my_classes(Request $req)
+    {
         $my_classes = User::find('SV-19021254')->practice_classes()->get();
         return response([
             'message' => 'Load course successfully.',

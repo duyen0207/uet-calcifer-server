@@ -11,13 +11,17 @@ class CourseController extends Controller
     //
     function getLatestSemesters(Request $request)
     {
-        $userId = $request->user()->UserId;
-        $latestSemester = DB::select("Call Proc_Advance_GetSemestersByUser(?)", array($userId));
+        $user = $request->user();
+        $latestSemester = [];
+        if ($user->UserRole == 2) {
+            $latestSemester = DB::select("Call Proc_Other_GetLatestSemesters");
+        } else
+            $latestSemester = DB::select("Call Proc_Advance_GetSemestersByUser(?)", array($user->UserId));
 
         return
             response([
                 'message' => 'Load semester successfully.',
-                'userId' => $userId,
+                'user' => $user->UserName,
                 'data' => $latestSemester
             ], 201);
     }

@@ -9,22 +9,29 @@ use Illuminate\Support\Facades\DB;
 class PracticeClassController extends Controller
 {
     // show
-    function show(Request $req)
+    function show(Request $request)
     {
-        $userId = $req->UserId;
+        $user = $request->user();
+        $semester = $request->semester;
 
-        $practice_classes = PracticeClass::all();
+        $practice_classes = [];
 
-        return response([
-            "message" => "Load dữ liệu thành công.",
-            "data" => $practice_classes
-        ]);
+        if ($user->UserRole == 2 || $user->UserRole == 3) {
+            $practice_classes = DB::select("CALL Proc_PracticeClass_GetAllBySemester(?)", array($semester));
+        }
+
+        return
+            response([
+                'message' => 'Load classes successfully.',
+                'user' => $request->user()->UserName,
+                'data' => $practice_classes
+            ], 201);
     }
 
     // create
-    function create(Request $req)
+    function create(Request $request)
     {
-        $req->validate([
+        $request->validate([
             // 'ClassId' => 'required',
             'ClassCode' => 'required',
             // 'ClassGroup' => 'required',
@@ -32,7 +39,7 @@ class PracticeClassController extends Controller
 
         ]);
 
-        $classId = $req->ClassCode . ' N' . $req->ClassGroup;
+        $classId = $request->ClassCode . ' N' . $request->ClassGroup;
         $isExist = PracticeClass::where('ClassId', $classId)->first();
 
         if ($isExist) return response([
@@ -40,11 +47,11 @@ class PracticeClassController extends Controller
         ]);
         $practice_class = PracticeClass::create([
             'ClassId' => $classId,
-            'ClassCode' => $req->ClassCode,
+            'ClassCode' => $request->ClassCode,
             'ClassGroup' => 1,
             'Semester' => "I 2022-2023",
             'CreatedTime' => now(),
-            'CreatedBy' => $req->CreatedBy,
+            'CreatedBy' => $request->CreatedBy,
         ]);
 
         return response([
@@ -78,6 +85,28 @@ class PracticeClassController extends Controller
                 'semester' => $semester,
                 "classCode" => $classCode,
                 'data' => $data
+            ], 201);
+    }
+
+    // get members of class
+    function getAllMembers($classId, Request $request)
+    {
+        $user = $request->user();
+        // $practiceClass = DB::select("CALL Proc_PracticeClass_GetById(?)", array($classId));
+
+        $students = DB::select("CALL Proc_PracticeClass_GetAllStudents(?)", array($classId));
+        $teachers = DB::select("CALL Proc_Manage_GetAllTeachersByClassCode(?)", array($classId));
+
+        // unset($students['FirstName']);
+
+        return
+            response([
+                'message' => 'Load classes successfully.',
+                'user' => $request->user()->UserName,
+                'data' => [
+                    "lecturers" => $teachers,
+                    "students" => $students
+                ]
             ], 201);
     }
 }

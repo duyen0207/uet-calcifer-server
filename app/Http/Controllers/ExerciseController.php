@@ -58,13 +58,11 @@ class ExerciseController extends Controller
         // ]);
         $exercise = Exercise::create([
             // 'ExerciseId' => $req->ExerciseId,
-            'ExerciseId' => Str::uuid()->toString(),
+            // 'ExerciseId' => Str::uuid()->toString(),
             'ProblemId' => $req->ProblemId,
             'ClassId' => $req->ClassId,
-            // 'OpenTime' => $req->OpenTime,
-            // 'CloseTime' => $req->CloseTime,
-            'OpenTime' => now(),
-            'CloseTime' => now(),
+            'OpenTime' => $req->OpenTime,
+            'CloseTime' => $req->CloseTime,
             'MaxSubmissions' => $req->MaxSubmissions,
             'ExerciseType' => $req->ExerciseType,
             'CreatedTime' => now(),
@@ -74,7 +72,7 @@ class ExerciseController extends Controller
         ]);
 
         return response([
-            'message' => 'Exercise created successfully.' . $exercise->ExerciseId,
+            'message' => 'Exercise created successfully.' . $exercise,
         ], 201);
     }
 
