@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\UserImport;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Throwable;
 
 class UserController extends Controller
 {
@@ -36,5 +39,30 @@ class UserController extends Controller
             'message' => 'Load course successfully.',
             'data' => $my_classes
         ], 201);
+    }
+
+    function import(Request $request)
+    {
+        // $userRole=$request->userRole;
+        $file = $request->file;
+
+        if ($file) {
+
+            $import = new UserImport;
+            $import->import($file);
+
+            dd($import->failures());
+
+            return response([
+                'message' => 'Import successfully.',
+                'data' => $file
+            ], 201);
+        }
+
+
+        // return response([
+        //     'message' => 'Load course successfully.',
+        //     'data' => $file
+        // ], 201);
     }
 }

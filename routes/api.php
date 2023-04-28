@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::delete('/users', [AuthController::class, 'login']);
     // get class of user
     Route::get('/users-classes', [UserController::class, 'my_classes']);
+    Route::post('/users/import', [UserController::class, 'import']);
 
     /**
      * Courses
