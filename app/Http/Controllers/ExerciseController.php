@@ -72,7 +72,7 @@ class ExerciseController extends Controller
         ]);
 
         return response([
-            'message' => 'Exercise created successfully.' . $exercise,
+            'message' => 'Thêm mới thành công.',
         ], 201);
     }
 

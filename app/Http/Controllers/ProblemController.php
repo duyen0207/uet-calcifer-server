@@ -14,7 +14,7 @@ class ProblemController extends Controller
     // show
     function show(Request $req)
     {
-        $userId = $req->UserId;
+        // $userId = $req->UserId;
 
         $problems = Problem::all();
 

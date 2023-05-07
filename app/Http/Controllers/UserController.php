@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UsersExport;
 use App\Imports\UserImport;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,6 +11,14 @@ use Throwable;
 
 class UserController extends Controller
 {
+
+    function all()
+    {
+        return response([
+            'message' => 'Load course successfully.',
+            'data' => User::all()
+        ], 201);
+    }
     //
     function login(Request $request)
     {
@@ -44,18 +53,46 @@ class UserController extends Controller
     function import(Request $request)
     {
         // $userRole=$request->userRole;
+        // if ($request->hasFile('file')) {
+        //     $file = $request->file('file');
+        //     $fileName = $file->getClientOriginalName();
+        //     $file->storeAs('uploads', $fileName);
+        //     return response()->json(['success' => true]);
+        //     dd("Hello", $file);
+        // } else {
+        //     return response()->json(['nâu' => false]);
+        // }
+
+        // dd('hi');
+        $user = $request->user();
         $file = $request->file;
+        $userType = $request->userType;
+
+        $message = '';
+        if ($userType == 0) {
+            $message = "sinh viên";
+        } else if ($userType == 1) {
+            $message = "giảng viên";
+        } else {
+            $message = "chuyên viên";
+        }
 
         if ($file) {
 
-            $import = new UserImport;
+            $import = new UserImport($user->FullName, $userType);
             $import->import($file);
 
-            dd($import->failures());
+            if ($import->failures()->isNotEmpty()) {
+                return response([
+                    'message' => $import->failures(),
+                    'data' => $file
+                ], 409);
+            };
 
             return response([
-                'message' => 'Import successfully.',
-                'data' => $file
+                'message' => 'Import ' . $message . ' thành công.',
+                'data' => $file,
+                'userType' => $userType
             ], 201);
         }
 
@@ -64,5 +101,10 @@ class UserController extends Controller
         //     'message' => 'Load course successfully.',
         //     'data' => $file
         // ], 201);
+    }
+
+    function export(Request $request)
+    {
+        return new UsersExport;
     }
 }

@@ -60,9 +60,9 @@ class AuthController extends Controller
             // throw ValidationException::withMessages([
 
             // ]);
-            return [
+            return response([
                 'messages' => ['Wrong information.']
-            ];
+            ], 401);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;

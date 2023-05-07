@@ -53,4 +53,21 @@ class CourseController extends Controller
                 'data' => $data
             ], 201);
     }
+
+    function getLeaderBoard(Request $request)
+    {
+        $user = $request->user();
+        $data = [];
+        // get latest class of students
+        $class = DB::select("CALL Proc_GetLatestClassOfUser(?)", array($user->UserId));
+        if ($class) {
+            $data = DB::select("CALL Proc_GetLeaderBoard_ByClassId(?)", array($class[0]->ClassId));
+        }
+        return
+            response([
+                'message' => 'Load course successfully.',
+                'user' => $request->user()->UserId,
+                'data' => $data
+            ], 201);
+    }
 }

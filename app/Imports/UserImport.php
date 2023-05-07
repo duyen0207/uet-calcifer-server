@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -20,12 +21,27 @@ class UserImport implements
     WithHeadingRow,
     WithValidation,
     SkipsOnError,
-    SkipsOnFailure
+    SkipsOnFailure,
+    WithProgressBar
 {
 
     use Importable,
         SkipsErrors,
         SkipsFailures;
+
+
+    protected $createdBy;
+    protected $password;
+    protected $userRole;
+
+    public function __construct($createdBy = 'PĐT', $userType = 0, $password = '123')
+    {
+        $this->createdBy = $createdBy;
+        $this->userRole = $userType;
+        $this->password = $password;
+
+        // $this->password=Hash::make($password);
+    }
 
     /**
      * @param array $row
@@ -34,17 +50,17 @@ class UserImport implements
      */
     public function model(array $row)
     {
-        // dd($row);
+        // dd(Hash::make('123'));
         return new User([
             'UserName' => $row['ma_sv'],
-            'Password' => '123',
-            'UserRole' => 0,
+            'Password' => $this->password,
+            'UserRole' => $this->userRole,
             'FullName' => $row['ho_va_ten'],
             'Email' => $row['email'],
-            'DateOfBirth' => $row['ngay_sinh'],
+            'DateOfBirth' => '2001-01-01',
             'CourseClass' => $row['lop'],
             'CreatedTime' => now(),
-            // 'CreatedBy'=>$row[''],
+            'CreatedBy' => $this->createdBy,
             // 'ModifiedTime'=>$row[''],
             // 'ModifiedBy'=>$row[''],
         ]);

@@ -25,7 +25,9 @@ class SubmissionController extends Controller
     // create
     function create(Request $req)
     {
-        $req->validate([]);
+        $req->validate([
+            'SubmittedLink' => 'required'
+        ]);
 
         // $classId = $req->ClassCode . ' N' . $req->ClassGroup;
         // $isExist = Submission::where('ClassId', $classId)->first();
@@ -44,9 +46,12 @@ class SubmissionController extends Controller
             'CreatedTime' => now()
         ]);
 
-        return response([
-            'message' => 'Class created successfully.' . $submission->SubmittedLink,
+        if ($submission) return response([
+            'message' => 'Nộp bài thành công.',
         ], 201);
+        else return response([
+            'message' => 'Có lỗi xảy ra. Vui lòng kiểm tra lại bài nộp' . $submission->SubmittedLink,
+        ], 400);
     }
 
     // get all by exercise id
@@ -63,12 +68,10 @@ class SubmissionController extends Controller
                 'message' => "You don't have permission to access.",
                 'data' => null
             ], 403);
-        } 
-        else if ($user->UserRole == 0) {
+        } else if ($user->UserRole == 0) {
             // student
             $submissions = DB::select("CALL Proc_Submission_GetByUserAndExercise(?,?)", array($user->UserId, $exerciseId));
-        } 
-        else {
+        } else {
             // teacher
             $submissions = DB::select("CALL Proc_Submission_GetAllOfExercise(?)", array($exerciseId));
         }
@@ -78,5 +81,4 @@ class SubmissionController extends Controller
                 'data' => $submissions
             ], 201);
     }
-
 }

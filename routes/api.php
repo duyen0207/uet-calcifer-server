@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // get class of user
     Route::get('/users-classes', [UserController::class, 'my_classes']);
     Route::post('/users/import', [UserController::class, 'import']);
+    // Route::get('/users/export', [UserController::class, 'export']);
 
     /**
      * Courses
@@ -51,7 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // get course in semester
     Route::get('/courses', [CourseController::class, 'getCourseByUserAndSemester']);
     Route::get('/theory-classes', [CourseController::class, 'getTheoryClass']);
-
+    Route::get('/courses/leader-board', [CourseController::class, 'getLeaderBoard']);
 
 
     /**
@@ -126,8 +127,8 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * Problems
      */
-    // filter
-    Route::get('/problems/filter', [ProblemController::class, 'show']);
+    // 
+    Route::get('/problems', [ProblemController::class, 'show']);
 
     // create
     Route::post('/problems', [ProblemController::class, 'create']);
@@ -156,6 +157,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("/statistic/exercises", [ExerciseController::class, "statistic"]);
 });
 
+
+
 /**
  * Assignments
  */
@@ -171,6 +174,8 @@ Route::delete('/assignments', [AuthController::class, 'login']);
 
 
 
+Route::get('/users/export', [UserController::class, 'export']);
+Route::get('/users/all', [UserController::class, 'all']);
 
 
 
